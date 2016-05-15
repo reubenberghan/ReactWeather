@@ -10,13 +10,13 @@ const PORT = process.env.PORT || 3000;
 app.set('port', PORT);
 
 // custom middleware to check all incoming requests
-// if `http` then fine else redirect as `http`
+// if `https` then redirect as `http` else fine and call `next`
 // this is because openweathermap doesn't like `https` requests
 app.use(function httpsRedirect (req, res, next) {
-    if (req.headers['x-forwarded-proto'] === 'http') {
-        next();
-    } else {
+    if (req.headers['x-forwarded-proto'] === 'https') {
         res.redirect('http://' + req.hostname + req.url);
+    } else {
+        next();
     }
 });
 
