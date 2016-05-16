@@ -13,6 +13,10 @@ var Weather = require('Weather');
 var About = require('About');
 var Examples = require('Examples');
 
+// load foundation css
+require('style!css!foundation-sites/dist/foundation.min.css');
+$(document).foundation();
+
 // the `IndexRoute` component lets `react` know which component is our default (index) route to render
 // we then nest further `Route` components to define the components we want rendered at which route
 ReactDOM.render(
