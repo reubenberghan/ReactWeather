@@ -4,6 +4,7 @@ var React = require('react');
 
 var WeatherForm = require('WeatherForm');
 var WeatherMessage = require('WeatherMessage');
+var ErrorModal = require('ErrorModal');
 
 var openWeatherMap = require('openWeatherMap');
 
@@ -20,7 +21,10 @@ var Weather = React.createClass({
         // with es6 we could just use an arrow function (lexically bound) which would ensure this for us
         var that = this;
         
-        this.setState({ isLoading: true });
+        this.setState({
+            isLoading: true,
+            errorMessage: null
+        });
         
         openWeatherMap.getTemp(location)
             .then(function fullfillTemp (temp) {
@@ -29,14 +33,16 @@ var Weather = React.createClass({
                     temp: temp,
                     isLoading: false
                 });
-            }, function rejectTemp (err) {
-                that.replaceState({ isLoading: false });
-                alert(err);
+            }, function rejectTemp (e) {
+                that.replaceState({
+                   isLoading: false,
+                   errorMessage: e.message
+                });
             });
     },
     render: function renderWeather () {
         // es6 destructuring our `state` object for the necessary state vars
-        var { isLoading, temp, location } = this.state;
+        var { isLoading, temp, location, errorMessage } = this.state;
         
         // since we only want to render a message once the user has entered something
         // we set up a function to handle the logic and render our message as required
@@ -48,11 +54,20 @@ var Weather = React.createClass({
             }
         }
         
+        function renderError () {
+            if (typeof errorMessage == 'string') {
+                return (
+                    <ErrorModal message={ errorMessage } />
+                );
+            }
+        }
+        
         return (
             <div>
                 <h1 className="text-center">Get Weather</h1>
                 <WeatherForm onSearch={ this.handleSearch } />
                 { renderMessage() }
+                { renderError() }
             </div>
         );
     }
