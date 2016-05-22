@@ -1,6 +1,8 @@
 'use strict';
 
 var React = require('react');
+var ReactDOM = require('react-dom');
+var ReactDOMServer = require('react-dom/server');
 
 var ErrorModal = React.createClass({
     getDefaultProps: function getDefaultPropsErrorModal () {
@@ -20,7 +22,34 @@ var ErrorModal = React.createClass({
     // which is where the lifecycle component `componentDidMount` comes in
     componentDidMount: function componentDidMountErrorModal () {
         
-        // create a new instance of our modal using the markup below
+        // as we're now handling the render of the modal here we need the required `props` vars
+        var { title, message } = this.props;
+        
+        // due to foundation manipulating the DOM
+        // i.e. removing the modal markup when a user closes the modal
+        // and because react wants to keep track of all the DOM elements it renders to manage state etc.
+        // react throws an 'Invariant Violation' error if we render the modal with the traditional `render` method
+        // then close it and try to re-render any child components in the same page
+        // this means we want to add our modal markup seperately using `componentDidMount`
+        // so we can control its lifecycle seperately from the other react components 
+        var modalMarkup = (
+             <div id="error-modal" className="reveal tiny text-center" data-reveal="">
+                <h4>{ title }</h4>
+                <p>{ message }</p>
+                <p>
+                    <button className="button hollow" data-close="">Close</button>
+                </p>
+            </div>
+        );
+        
+        // using jQuery and the `ReactDOMServer.renderToString` method we can take the jsx of `modalMarkup`
+        // and convert it to actual markup to be rendered by the browser
+        var $modal = $(ReactDOMServer.renderToString(modalMarkup));
+        
+        // now using jQuery and the `ReactDOM.findDOMNode` method we add the modal markup to the `ErrorModal` component in the DOM
+        $(ReactDOM.findDOMNode(this)).html($modal);
+        
+        // create a new instance of our modal using foundation
         var modal = new Foundation.Reveal($('#error-modal'));
         
         // explicitly open the modal
@@ -33,16 +62,8 @@ var ErrorModal = React.createClass({
     // basically when adding attributes in react and jsx if you would expect them to have no value in the DOM
     // this has to be set explicitly by adding the `=""`
     render: function renderErrorModal () {
-        var { title, message } = this.props;
-        
         return (
-            <div id="error-modal" className="reveal tiny text-center" data-reveal="">
-                <h4>{ title }</h4>
-                <p>{ message }</p>
-                <p>
-                    <button className="button hollow" data-close="">Close</button>
-                </p>
-            </div>
+           <div></div>
         );
     }
 });
