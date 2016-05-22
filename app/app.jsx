@@ -18,7 +18,7 @@ require('style!css!foundation-sites/dist/foundation.min.css');
 $(document).foundation();
 
 // custom app css
-require('style!css!applicationStyles');
+require('style!css!sass!applicationStyles');
 
 // the `IndexRoute` component lets `react` know which component is our default (index) route to render
 // we then nest further `Route` components to define the components we want rendered at which route
