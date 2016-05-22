@@ -23,7 +23,9 @@ var Weather = React.createClass({
         
         this.setState({
             isLoading: true,
-            errorMessage: null
+            errorMessage: null,
+            location: null,
+            temp: null
         });
         
         openWeatherMap.getTemp(location)
@@ -34,11 +36,29 @@ var Weather = React.createClass({
                     isLoading: false
                 });
             }, function rejectTemp (e) {
-                that.replaceState({
+                that.setState({
                    isLoading: false,
                    errorMessage: e.message
                 });
             });
+    },
+    // adding the `componentDidMount` method we can check and see whether a location was passed in the query strings
+    // if so run a search for it and reset the `window.location.hash` (`window.location` is a native browser object not to confused with app specific `location` var) 
+    componentDidMount: function componentDidMountWeather() {
+        var location = this.props.location.query.location;
+        
+        if (location && location.length > 0) {
+            this.handleSearch(location);
+            window.location.hash = '#/';
+        }
+    },
+    componentWillReceiveProps: function componentWillReceivePropsWeather(newProps) {
+        var location = newProps.location.query.location;
+        
+        if (location && location.length > 0) {
+            this.handleSearch(location);
+            window.location.hash = '#/';
+        }
     },
     render: function renderWeather () {
         // es6 destructuring our `state` object for the necessary state vars
