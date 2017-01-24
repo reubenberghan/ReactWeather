@@ -23,8 +23,6 @@ var person = {
 
 // person.greet();
 
-// challenge area
-
 function add(a, b) {
     return a + b;
 }

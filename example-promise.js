@@ -29,8 +29,6 @@
 //         console.log('promise error', err);
 //     });
 
-// challenge area
-
 function addPromise (a,b) {
     return new Promise(function (resolve, reject) {
         if (typeof a == 'number' && typeof b == 'number') {
@@ -53,4 +51,3 @@ addPromise(1,'a')
     }, function (err) {
         console.log('error', err);
     });
-
