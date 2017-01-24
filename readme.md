@@ -8,3 +8,5 @@ View live demo on Heroku [here](http://ancient-stream-21186.herokuapp.com/).
 
 - [ ] Remove API key from GitHub files
 - [ ] Refactor for ES2015 (some use but still using `var` and not using `import` or `export`)
+- [ ] Redirect Foundation through app.scss
+- [ ] Implement unit testing
